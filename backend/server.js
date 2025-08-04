@@ -8,41 +8,40 @@ const quoteRoute = require('./routes/quoteRoute');
 
 const app = express();
 
-// 🧠 Body parser FIRST
+// 🧠 Body parser
 app.use(express.json());
 
-// ✅ CORS setup
+// ✅ CORS config
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 
-// ✅ MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/solar_quotes', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-mongoose.connection.on('connected', () => {
-  console.log('✅ Connected to MongoDB');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err);
-});
-
-// ✅ API routes
+// ✅ Routes
 app.use('/api', authRoute);
 app.use('/api', quoteRoute);
 
-// Root route
+// Healthcheck
 app.get('/', (req, res) => {
-  res.send('API is working!');
+  res.send('🌞 Solar Quotes API is up!');
 });
 
-// ✅ Start server
+// ✅ Connect to MongoDB THEN start the server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-});
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/solar_quotes';
+
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection failed:', err.message);
+    process.exit(1); // Exit if DB not connected
+  });

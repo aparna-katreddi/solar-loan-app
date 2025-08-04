@@ -5,36 +5,47 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await api.post("/api/login", { username, password });
-      localStorage.setItem("dealerId", res.data.dealerId);
-      navigate("/quote");
+      const dealerId = res.data.userId;
+      localStorage.setItem("dealerId", dealerId);
+
+      // ✅ Optional: fetch profile
+      const profileRes = await api.get(`/api/profile?dealerId=${dealerId}`);
+      console.log("✅ Profile:", profileRes.data);
+
+      navigate("/quote"); // Go to quote page after login
     } catch (err) {
-      alert("Login failed");
+      console.error("❌ Login failed:", err);
+      setError("Invalid username or password");
     }
   };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🌞 Dealer Portal 🔋 </h1>
+      <h1>☀️ Solar Quote Portal 🔋</h1>
       <div style={styles.form}>
         <input
           placeholder="Username"
-          style={styles.input}
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
+          style={styles.input}
         />
         <input
           placeholder="Password"
           type="password"
-          style={styles.input}
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
         />
-        <button style={styles.button} onClick={handleLogin}>
+        <button onClick={handleLogin} style={styles.button}>
           Login
         </button>
+        {error && <p style={styles.error}>{error}</p>}
       </div>
     </div>
   );
@@ -42,33 +53,39 @@ function LoginPage() {
 
 const styles = {
   container: {
+    marginTop: "100px",
     textAlign: "center",
-    marginTop: "50px",
     fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    fontSize: "2rem",
-    marginBottom: "30px",
   },
   form: {
     display: "inline-block",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    backgroundColor: "#f9f9f9",
     textAlign: "left",
   },
   input: {
     display: "block",
     width: "250px",
     padding: "10px",
-    margin: "10px 0",
-    fontSize: "1rem",
+    marginBottom: "10px",
+    fontSize: "16px",
   },
   button: {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#007bff",
-    color: "white",
-    fontSize: "1rem",
+    backgroundColor: "#4da6ff",
+    color: "#fff",
+    fontSize: "16px",
     border: "none",
+    borderRadius: "4px",
     cursor: "pointer",
+  },
+  error: {
+    color: "red",
+    marginTop: "10px",
+    fontSize: "14px",
   },
 };
 

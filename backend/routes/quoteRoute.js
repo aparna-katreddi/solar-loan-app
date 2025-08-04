@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Quote = require('../models/Quote');
 
-// POST /api/quote
 router.post('/quote', async (req, res) => {
   const {
     dealerId,
@@ -16,15 +15,15 @@ router.post('/quote', async (req, res) => {
     solarType,
     batteryOption,
     year,
-    apr
+    apr,
   } = req.body;
 
   try {
-    // 1. System price logic
-    const panelPrice = 500; // Example: $500 per panel
+    // 1. Calculate system price based on panels
+    const panelPrice = 500; // $500 per panel
     const basePrice = panelCount * panelPrice;
 
-    // 2. Add battery price if storage is included
+    // 2. Add battery price if applicable
     let batteryPrice = 0;
     if (solarType === "Solar + Storage") {
       if (batteryOption === "Tesla Powerwall") batteryPrice = 12000;
@@ -33,11 +32,13 @@ router.post('/quote', async (req, res) => {
 
     const systemPrice = basePrice + batteryPrice;
 
-    // 3. Apply tax incentive (e.g., 30% ITC)
+    // 3. Calculate tax credit (ITC 30%)
     const taxCredit = 0.30 * systemPrice;
+
+    // 4. Calculate net loan amount after tax credit
     const netLoanAmount = systemPrice - taxCredit;
 
-    // 4. Save quote to DB
+    // 5. Save the quote to DB
     const newQuote = new Quote({
       dealerId,
       firstName,
@@ -58,7 +59,7 @@ router.post('/quote', async (req, res) => {
 
     await newQuote.save();
 
-    // 5. Calculate monthly rent (only if loan)
+    // 6. Calculate monthly rent if loan type
     let monthlyRent = null;
     if (financeType === "loan") {
       const months = parseInt(year);
@@ -66,11 +67,11 @@ router.post('/quote', async (req, res) => {
       monthlyRent = (netLoanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
     }
 
-    // 6. Send response
+    // 7. Send back the response with quote details
     res.json({
       quoteId: newQuote._id,
       monthlyRent: monthlyRent ? monthlyRent.toFixed(2) : null,
-      systemPrice,
+      systemPrice: systemPrice.toFixed(2),
       taxCredit: taxCredit.toFixed(2),
       netLoanAmount: netLoanAmount.toFixed(2),
     });

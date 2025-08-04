@@ -27,9 +27,38 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    res.json({ message: 'Login successful', userId: user._id });
+    res.json({
+      message: 'Login successful',
+      userId: user._id,
+      username: user.username,
+    });
   } catch (err) {
     console.error('❌ Login error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET /api/profile?dealerId=<id>
+router.get('/profile', async (req, res) => {
+  const dealerId = req.query.dealerId;
+
+  if (!dealerId) {
+    return res.status(400).json({ message: 'Missing dealerId ' });
+  }
+
+  try {
+    const user = await User.findById(dealerId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Dealer not found' });
+    }
+
+    res.json({
+      dealerId: user._id,
+      username: user.username,
+    });
+  } catch (err) {
+    console.error('❌ Profile fetch error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

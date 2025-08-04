@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +16,25 @@ function CreateQuotePage() {
   const [apr, setApr] = useState("3.99");
 
   const navigate = useNavigate();
+
+    useEffect(() => {
+      const dealerId = localStorage.getItem("dealerId");
+      if (!dealerId || dealerId === "undefined" ) {
+        console.warn("⚠️ No dealerId found in localStorage");
+        return;
+      }
+
+          async function fetchDealerProfile() {
+            try {
+              const res = await api.get(`/api/profile?dealerId=${dealerId}`);
+              console.log("✅ Dealer profile:", res.data);
+            } catch (err) {
+              console.error("❌ Failed to fetch dealer profile", err);
+            }
+          }
+
+          fetchDealerProfile();
+        }, []);
 
   const handleSubmit = async () => {
     const res = await api.post("/api/quote", {
