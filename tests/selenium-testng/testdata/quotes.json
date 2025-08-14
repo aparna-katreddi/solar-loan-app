@@ -1,0 +1,30 @@
+[
+  {
+    "dealerId": "688d2facfff3b7b25443b1e8",
+    "firstName": "John",
+    "lastName": "Doe",
+    "address": "123 Solar St",
+    "panel": "Maxeon 425",
+    "panelCount": 1,
+    "state": "CA",
+    "financeType": "loan",
+    "solarType": "PV Only",
+    "batteryOption": "No Storage",
+    "year": "10",
+    "apr": "6.54"
+  },
+  {
+    "dealerId": "688d2facfff3b7b25443b1e8",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "address": "456 Clean St",
+    "panel": "Maxeon 425",
+    "panelCount": 2,
+    "state": "CA",
+    "financeType": "loan",
+    "solarType": "Solar + Storage",
+    "batteryOption": "Tesla Powerwall",
+    "year": "15",
+    "apr": "4.99"
+  }
+]

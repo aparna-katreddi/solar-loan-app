@@ -9,6 +9,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setError(""); // Clear previous error
     try {
       const res = await api.post("/api/login", { username, password });
       const dealerId = res.data.userId;
@@ -21,7 +22,11 @@ function LoginPage() {
       navigate("/quote"); // Go to quote page after login
     } catch (err) {
       console.error("❌ Login failed:", err);
-      setError("Invalid username or password");
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message); // Show message from backend
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     }
   };
 
