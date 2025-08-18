@@ -56,4 +56,4 @@ jobs:
         run: |
           echo "Running suite: $SUITE"
           cd tests/selenium-testng
-          mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD
+          mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD -DisHeadless=true

@@ -46,8 +46,6 @@ public class BaseTest {
         }
         DriverManager.setDriver(driver);
         driver.manage().window().maximize();
-       // String username = System.getProperty("TEST_USERNAME");
-       // String password = System.getProperty("TEST_PASSWORD");
         String dealerId = ApiUtils.loginAndGetDealerId(baseUrl, username, password);
         driver.get(baseUrl);
         ApiUtils.injectDealerIdIntoLocalStorage(driver, dealerId);
