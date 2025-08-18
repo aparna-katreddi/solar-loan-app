@@ -1,0 +1,58 @@
+name: Run Selenium TestNG Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment"
+        required: true
+        default: "qa"
+        type: choice
+        options:
+          - qa
+          - uat
+
+      browser:
+        description: "Select browser"
+        required: true
+        default: "chrome"
+        type: choice
+        options:
+          - chrome
+          - firefox
+
+      suite:
+        description: "Select TestNG suite to run"
+        required: true
+        default: "regression.xml"
+        type: choice
+        options:
+          - smoke.xml
+          - regression.xml
+          - sanity.xml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    env:
+      ENV: ${{ github.event.inputs.environment }}
+      BROWSER: ${{ github.event.inputs.browser }}
+      SUITE: ${{ github.event.inputs.suite }}
+      TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+
+      - name: Run TestNG Tests
+        run: |
+          echo "Running suite: $SUITE"
+          mvn test -DsuiteXmlFile=$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD
