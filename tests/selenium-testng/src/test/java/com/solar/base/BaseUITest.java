@@ -10,9 +10,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-
 import java.lang.reflect.Method;
 import java.util.Properties;
 
@@ -24,7 +21,10 @@ public class BaseUITest {
     @BeforeMethod
     public void setUp( Method method) {
         boolean isHeadless = Boolean.parseBoolean(System.getProperty("isHeadless" , "false"));
+        System.out.println("Running test: " + method.getName());
+        System.out.println("is headless: " +isHeadless);
         String browser = System.getProperty("browser", "chrome");
+        System.out.println("browser: " +browser);
         switch (browser.toLowerCase()) {
             case "firefox":
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
@@ -42,10 +42,12 @@ public class BaseUITest {
                     chromeOptions.addArguments("--disable-dev-shm-usage");
                 }
                 driver = new ChromeDriver(chromeOptions);
+                System.out.println("driver: " +driver);
                 break;
         }
         DriverManager.setDriver(driver);
         driver.manage().window().maximize();
+        System.out.println("baseUrl: " +baseUrl);
         driver.get(baseUrl);
     }
 
