@@ -57,3 +57,23 @@ jobs:
           echo "Running suite: $SUITE"
           cd tests/selenium-testng
           mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD -DisHeadless=true
+
+      - name: Deploy Extent Report to GitHub Pages
+        if: success()
+        run: |
+          # Set variables
+          REPORT_FILE="tests/selenium-testng/test-output/extent-report-${BROWSER}.html"
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+          # Clone gh-pages branch
+          git clone --quiet --branch=gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
+
+          # Copy report
+          cp "$REPORT_FILE" gh-pages/extent-report-${BROWSER}.html
+
+          # Commit and push
+          cd gh-pages
+          git add extent-report-${BROWSER}.html
+          git commit -m "📊 Update ${BROWSER} Extent Report from run ${{ github.run_number }}" || echo "No changes to commit"
+          git push
