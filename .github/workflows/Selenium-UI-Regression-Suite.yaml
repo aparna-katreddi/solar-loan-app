@@ -55,5 +55,5 @@ jobs:
       - name: Run TestNG Tests
         run: |
           echo "Running suite: $SUITE"
-          cd solar-loan-app/tests/selenium-testng
+          cd tests/selenium-testng
           mvn test -DsuiteXmlFile=$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD
