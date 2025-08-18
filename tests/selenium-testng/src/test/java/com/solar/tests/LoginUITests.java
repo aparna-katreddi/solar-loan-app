@@ -1,33 +1,30 @@
 package com.solar.tests;
 
-import com.solar.base.BaseTest;
+import com.solar.base.BaseUITest;
+import com.solar.listeners.TestListener;
 import com.solar.pages.LoginPage;
 import com.solar.utils.AssertUtils;
+import com.solar.utils.TestDataProvider;
+import org.json.JSONObject;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.testng.annotations.DataProvider;
 
 
-public class LoginUITests extends BaseTest {
+@Listeners(TestListener.class)
+public class LoginUITests extends BaseUITest {
 
-    @DataProvider(name = "loginData")
-    public Object[][] loginData() {
-        return new Object[][] {
-                {"", "","Username and password are required"},
-                {"invalidUser", "","Username and password are required"},
-                {"", "invalidPwd","Username and password are required"},
-                {"invalidUser", "invalidPwd","Invalid credentials"},
-        };
-    }
 
-    @Test(dataProvider = "loginData")
-    public void testInvalidLoginErrorMessages(String username, String password, String errorMessage) throws InterruptedException {
+    @Test(dataProvider = "invalidLoginData", dataProviderClass = TestDataProvider.class)
+    public void testInvalidLoginErrorMessages(JSONObject data ) throws InterruptedException {
+        String userName=data.getString("userName");
+        String password = data.getString("password");
         LoginPage loginPage = new LoginPage(driver);
-        AssertUtils.assertEquals(driver.getCurrentUrl(), baseUrl,
+        AssertUtils.assertEquals(driver.getCurrentUrl(), baseUrl+"/",
                 "Step: Navigated to login page");
-        loginPage.login(username, password);
+        loginPage.login(userName,password );
         String actualErrorMessage = loginPage.getErrorMessage();
-        AssertUtils.assertEquals(actualErrorMessage, errorMessage,
-                String.format("Step: Validating error message for Username: '%s', Password: '%s'", username, password));
+        AssertUtils.assertEquals(actualErrorMessage, data.getString("errorMessage"),
+                String.format("Step: Validating error message for Username: '%s', Password: '%s'", userName, password));
     }
 }
 

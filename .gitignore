@@ -41,3 +41,11 @@ coverage/
 *.tgz
 *.bak
 *.tmp
+
+# Java build files
+*.class
+target/
+build/
+out/
+test-output/
+

@@ -1,19 +1,11 @@
 package com.solar.pages;
 
-import com.aventstack.extentreports.Status;
-import com.solar.reports.ExtentTestManager;
-import com.solar.utils.ConfigManager;
 import com.solar.utils.WebUIUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class LoginPage {
-    private WebDriver driver;
+    private final WebDriver driver;
 
     private final By usernameField = By.xpath("//input[@placeholder='Username']");
     private final By passwordField = By.xpath("//input[@placeholder='Password']");

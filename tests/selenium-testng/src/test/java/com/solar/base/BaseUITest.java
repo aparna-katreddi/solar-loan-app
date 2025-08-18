@@ -1,28 +1,28 @@
 package com.solar.base;
 
-
 import com.solar.reports.ExtentTestManager;
-import com.solar.utils.ApiUtils;
+import com.solar.utils.ConfigManager;
 import com.solar.utils.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+
 import java.lang.reflect.Method;
 import java.util.Properties;
-import com.solar.utils.ConfigManager;
 
-public class BaseTest {
+public class BaseUITest {
     protected WebDriver driver;
     protected Properties config;
     protected String baseUrl = ConfigManager.get("baseUrl");
-    protected String username = System.getProperty("TEST_USERNAME");
-    protected String password = System.getProperty("TEST_PASSWORD");
 
     @BeforeMethod
-    public void setUp(Method method) {
+    public void setUp( Method method) {
         boolean isHeadless = Boolean.parseBoolean(System.getProperty("isHeadless" , "false"));
         String browser = System.getProperty("browser", "chrome");
         switch (browser.toLowerCase()) {
@@ -46,12 +46,7 @@ public class BaseTest {
         }
         DriverManager.setDriver(driver);
         driver.manage().window().maximize();
-       // String username = System.getProperty("TEST_USERNAME");
-       // String password = System.getProperty("TEST_PASSWORD");
-        String dealerId = ApiUtils.loginAndGetDealerId(baseUrl, username, password);
         driver.get(baseUrl);
-        ApiUtils.injectDealerIdIntoLocalStorage(driver, dealerId);
-        driver.get(baseUrl + "/quote");
     }
 
     @AfterMethod

@@ -1,0 +1,20 @@
+[
+  { "userName":"",
+    "password":"",
+    "errorMessage":"Username and password are required"
+  },
+{  "userName":"invalidUser",
+   "password": "",
+   "errorMessage":"Username and password are required"
+},
+{ "userName":"",
+  "password":"invalidPwd",
+  "errorMessage":"Username and password are required"
+},
+{
+  "userName":"invalidUser",
+  "password":"invalidPwd",
+  "errorMessage":"Invalid credentials1"
+}
+
+]

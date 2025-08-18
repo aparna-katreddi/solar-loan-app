@@ -1,11 +1,14 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Solar Loan Suite">
+<suite name="Solar Loan Application UI Regression Suite" >
     <listeners>
         <listener class-name="com.solar.listeners.TestListener"/>
     </listeners>
-    <test name="E2E Tests">
+    <test name="UI Regression Tests">
         <classes>
-            <class name="com.solar.tests.LoginUITests" />
+            <class name="com.solar.tests.CreateQuoteUITests" />
+           <class name="com.solar.tests.LoginUITests" />
         </classes>
     </test>
 </suite>
+
+

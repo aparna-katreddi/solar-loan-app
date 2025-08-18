@@ -43,17 +43,16 @@ function CreateQuotePage() {
       lastName,
       address,
       panel,
-      panelCount: count,
+      panelCount: Number(count),
       state,
       financeType: type,
       solarType,
       batteryOption: solarType === "PV Only" ? "No Storage" : batteryOption,
-      year: type === "loan" ? year : null,
+      year: type === "loan" ? Number(year): null,
       apr: type === "loan" ? apr : null,
     });
     localStorage.setItem("quoteId", res.data.quoteId);
-    localStorage.setItem("monthlyRent", res.data.monthlyRent);
-    navigate("/loan");
+    navigate(`/quote/${res.data.quoteId}`);
   };
 
   return (

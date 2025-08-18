@@ -3,18 +3,17 @@
     <listeners>
         <listener class-name="com.solar.listeners.TestListener"/>
     </listeners>
-    <test name="UI Regression Tests">
+    <test name="API Regression Tests">
         <classes>
-
+            <class name="com.solar.tests.QuoteAPITest" />
+        </classes>
+    </test>
+   <test name="UI Regression Tests">
+        <classes>
             <class name="com.solar.tests.CreateQuoteUITests" />
         </classes>
     </test>
 
-    <test name="API Regression Tests">
-        <classes>
-            <class name="com.solar.tests.LoginUITests" />
-        </classes>
-    </test>
 
 </suite>
 

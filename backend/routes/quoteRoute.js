@@ -62,7 +62,7 @@ router.post('/quote', async (req, res) => {
     // 6. Calculate monthly rent if loan type
     let monthlyRent = null;
     if (financeType === "loan") {
-      const months = parseInt(year);
+      const months = parseInt(year) * 12;
       const monthlyRate = parseFloat(apr) / 100 / 12;
       monthlyRent = (netLoanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
     }
@@ -78,6 +78,49 @@ router.post('/quote', async (req, res) => {
   } catch (err) {
     console.error("❌ Error saving quote:", err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get('/quote/:id', async (req, res) => {
+  try {
+    const quote = await Quote.findById(req.params.id);
+
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    // Calculate monthly rent dynamically
+    let monthlyRent = null;
+    if (quote.financeType === "loan") {
+      const months = parseInt(quote.term) * 12;
+      const monthlyRate = parseFloat(quote.apr) / 100 / 12;
+      monthlyRent = (quote.netLoanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+      monthlyRent = monthlyRent.toFixed(2);
+    }
+
+    // Send quote with monthlyRent included
+    res.json({
+      quoteId: quote._id,
+      dealerId: quote.dealerId,
+      firstName: quote.firstName,
+      lastName: quote.lastName,
+      address: quote.address,
+      panel: quote.panel,
+      panelCount: quote.panelCount,
+      state: quote.state,
+      financeType: quote.financeType,
+      solarType: quote.solarType,
+      batteryOption: quote.batteryOption,
+      term: quote.term,
+      apr: quote.apr,
+      systemPrice: quote.systemPrice.toFixed(2),
+      taxCredit: quote.taxCredit.toFixed(2),
+      netLoanAmount: quote.netLoanAmount.toFixed(2),
+      monthlyRent: monthlyRent,
+    });
+  } catch (err) {
+    console.error("❌ Error fetching quote:", err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

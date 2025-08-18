@@ -15,7 +15,7 @@ public class AssertUtils {
             ExtentTestManager.getTest().log(Status.FAIL,
                     stepDescription + "<br><b>Expected:</b> " + expected + "<br><b>Actual:</b> " + actual +
                             "<br><b>Assertion failed:</b> " + e.getMessage());
-            throw e; // rethrow so TestNG marks it as failed
+            throw e;
         }
     }
 
@@ -41,6 +41,7 @@ public class AssertUtils {
             throw e;
         }
     }
+
 
 }
 
