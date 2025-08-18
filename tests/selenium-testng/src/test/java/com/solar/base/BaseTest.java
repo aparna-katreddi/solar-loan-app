@@ -24,7 +24,10 @@ public class BaseTest {
     @BeforeMethod
     public void setUp(Method method) {
         boolean isHeadless = Boolean.parseBoolean(System.getProperty("isHeadless" , "false"));
+        System.out.println("Running test: " + method.getName());
+        System.out.println("is headless: " +isHeadless);
         String browser = System.getProperty("browser", "chrome");
+        System.out.println("browser: " +browser);
         switch (browser.toLowerCase()) {
             case "firefox":
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
@@ -42,11 +45,16 @@ public class BaseTest {
                     chromeOptions.addArguments("--disable-dev-shm-usage");
                 }
                 driver = new ChromeDriver(chromeOptions);
+                System.out.println("driver: " +driver);
                 break;
         }
         DriverManager.setDriver(driver);
         driver.manage().window().maximize();
         String dealerId = ApiUtils.loginAndGetDealerId(baseUrl, username, password);
+        System.out.println("baseUrl: " +baseUrl);
+        System.out.println("dealerId: " + dealerId);
+        System.out.println("username: " + username);
+         System.out.println("password: " + password);
         driver.get(baseUrl);
         ApiUtils.injectDealerIdIntoLocalStorage(driver, dealerId);
         driver.get(baseUrl + "/quote");
