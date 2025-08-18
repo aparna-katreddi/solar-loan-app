@@ -43,7 +43,7 @@ jobs:
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java
@@ -52,19 +52,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Confirm TestNG Suite Exists (debug)
+      - name: Run TestNG Tests
         run: |
-            cd tests/selenium-testng
-            echo "Checking for suite file: $SUITE"
-            ls -l src/test/resources/$SUITE
-
-            - name: Run TestNG Tests
-              run: |
-                echo "Running suite: $SUITE"
-                cd tests/selenium-testng
-                mvn test \
-                  -DsuiteXmlFile=src/test/resources/$SUITE \
-                  -Dbrowser=$BROWSER \
-                  -Denv=$ENV \
-                  -Dusername=$TEST_USERNAME \
-                  -Dpassword=$TEST_PASSWORD
+          echo "Running suite: $SUITE"
+          cd tests/selenium-testng
+          mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD
