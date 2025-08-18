@@ -24,12 +24,11 @@ on:
       suite:
         description: "Select TestNG suite to run"
         required: true
-        default: "regression.xml"
+        default: "testng-ui-tests.xml"
         type: choice
         options:
-          - smoke.xml
-          - regression.xml
-          - sanity.xml
+          - testng-ui-tests.xml
+          - testng-api-tests.xml
 
 jobs:
   test:

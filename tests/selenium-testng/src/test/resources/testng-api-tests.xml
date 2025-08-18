@@ -8,12 +8,6 @@
             <class name="com.solar.tests.QuoteAPITest" />
         </classes>
     </test>
-   <test name="UI Regression Tests">
-        <classes>
-            <class name="com.solar.tests.CreateQuoteUITests" />
-        </classes>
-    </test>
-
 
 </suite>
 
