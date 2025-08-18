@@ -52,8 +52,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run TestNG Tests
+      - name: Confirm TestNG Suite Exists (debug)
         run: |
-          echo "Running suite: $SUITE"
-          cd tests/selenium-testng
-          mvn test -DsuiteXmlFile=$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername=$TEST_USERNAME -Dpassword=$TEST_PASSWORD
+            cd tests/selenium-testng
+            echo "Checking for suite file: $SUITE"
+            ls -l src/test/resources/$SUITE
+
+            - name: Run TestNG Tests
+              run: |
+                echo "Running suite: $SUITE"
+                cd tests/selenium-testng
+                mvn test \
+                  -DsuiteXmlFile=src/test/resources/$SUITE \
+                  -Dbrowser=$BROWSER \
+                  -Denv=$ENV \
+                  -Dusername=$TEST_USERNAME \
+                  -Dpassword=$TEST_PASSWORD
