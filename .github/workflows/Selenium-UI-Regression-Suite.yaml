@@ -62,7 +62,11 @@ jobs:
         if: always()
         run: |
           # Set variables
+          DATE=$(date -u +"%Y-%m-%d-%-H:%M:%S")UTC
           REPORT_FILE="tests/selenium-testng/test-output/extent-report-${BROWSER}.html"
+          REPORT_NAME="extent-report-${BROWSER}-${DATE}.html"
+          RUN_NUMBER=${{ github.run_number }}
+          
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
@@ -70,13 +74,10 @@ jobs:
           git clone --quiet --branch=gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
 
           # Copy report
-          cp "$REPORT_FILE" gh-pages/extent-report-${BROWSER}.html
+          cp "$REPORT_FILE" "gh-pages/${REPORT_NAME}"
 
           # Add clickable link with date/time stamp to index.html
           cd gh-pages
-          DATE=$(date -u +"%Y-%m-%d-%-H:%M:%S")UTC
-          RUN_NUMBER=${{ github.run_number }}
-          REPORT_NAME="extent-report-${BROWSER}.html"
 
           # Create index.html if missing
           if [ ! -f index.html ]; then
@@ -84,8 +85,10 @@ jobs:
           fi
 
           # Insert new report link before closing </ul>
-          sed -i "/<\/ul>/i <li><a href='${REPORT_NAME}?run=${DATE}'>${BROWSER} Report - Run ${RUN_NUMBER} - ${DATE}</a></li>" index.html
+          
+          # Insert new report link before closing </ul>
+          sed -i "/<\/ul>/i <li><a href='${REPORT_NAME}'>${BROWSER} Report - Run ${RUN_NUMBER} - ${DATE}</a></li>" index.html
 
-          git add extent-report-${BROWSER}.html index.html
-          git commit -m "📝 Add link to ${BROWSER} report run ${RUN_NUMBER} at ${DATE}" || echo "No changes to commit"
+          git add "$REPORT_NAME" index.html
+          git commit -m "📝 Add link to ${REPORT_NAME}" || echo "No changes to commit"
           git push
