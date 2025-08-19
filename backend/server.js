@@ -15,14 +15,17 @@ app.use(express.json());
 console.log('🧠 JSON body parser middleware applied.');
 
 // ✅ Updated: Proper CORS setup for production (Render)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://solar-loan-app-frontend.onrender.com'
+];
+
 const corsOptions = {
   origin: function(origin, callback) {
     console.log(`🌐 CORS check for origin: ${origin}`);
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://solar-loan-app-frontend.onrender.com'
-    ];
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like Postman or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
     const msg = 'CORS policy does not allow this origin.';
@@ -30,13 +33,19 @@ const corsOptions = {
     return callback(new Error(msg), false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Explicitly allow headers
+  preflightContinue: false // Let cors handle OPTIONS response internally
 };
 
 app.use(cors(corsOptions));
 
-// ✅ Ensures preflight (OPTIONS) requests return correct headers
-app.options('*', cors(corsOptions));
+// ✅ Log and handle all OPTIONS preflight requests explicitly
+app.options('*', (req, res) => {
+  console.log(`🛂 OPTIONS preflight request for ${req.path} from origin: ${req.headers.origin}`);
+  res.sendStatus(204); // No Content, proper response to OPTIONS
+});
+
 console.log('⚙️ CORS preflight handling enabled.');
 
 app.use('/api', authRoute);
