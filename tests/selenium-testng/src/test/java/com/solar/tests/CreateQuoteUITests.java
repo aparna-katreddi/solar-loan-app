@@ -73,6 +73,8 @@ public class CreateQuoteUITests extends BaseUITest {
         int year = data.getInt("year");
         double apr = data.getDouble("apr");
         LoginPage loginPage = new LoginPage(driver);
+        System.out.println("username comes from github secrets::::::::**"+username);
+        System.out.println("pwd comes from github secrets::::::::**"+password);
         QuotePage quotePage= loginPage.loginAndNavigateToQuotePage(username,password);
         AssertUtils.assertEquals(driver.getCurrentUrl(),baseUrl+"/quote", "Navigated to /quote page");
         quotePage.fillForm(firstName, lastName, address, state, panel, panelCount, solarType, financeType, year, apr);
