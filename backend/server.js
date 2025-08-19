@@ -4,8 +4,9 @@ const cors = require('cors');
 require('dotenv').config();
 
 console.log('🔧 Starting server setup...');
-
+console.log('🔁 Registering auth routes');
 const authRoute = require('./routes/authRoute');
+console.log('📦 Registering quote routes');
 const quoteRoute = require('./routes/quoteRoute');
 
 const app = express();
@@ -13,27 +14,29 @@ const app = express();
 app.use(express.json());
 console.log('🧠 JSON body parser middleware applied.');
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://solar-loan-app-frontend.onrender.com'
-];
-
-app.use(cors({
+// ✅ Updated: Proper CORS setup for production (Render)
+const corsOptions = {
   origin: function(origin, callback) {
     console.log(`🌐 CORS check for origin: ${origin}`);
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'CORS policy does not allow this origin.';
-      console.warn(`❌ ${msg} Origin: ${origin}`);
-      return callback(new Error(msg), false);
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://solar-loan-app-frontend.onrender.com'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    const msg = 'CORS policy does not allow this origin.';
+    console.warn(`❌ ${msg} Origin: ${origin}`);
+    return callback(new Error(msg), false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
-}));
+};
 
-app.options('*', cors()); // handle preflight OPTIONS requests
+app.use(cors(corsOptions));
+
+// ✅ Ensures preflight (OPTIONS) requests return correct headers
+app.options('*', cors(corsOptions));
 console.log('⚙️ CORS preflight handling enabled.');
 
 app.use('/api', authRoute);
