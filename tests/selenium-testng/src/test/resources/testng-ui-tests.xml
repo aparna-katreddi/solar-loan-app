@@ -6,7 +6,7 @@
     <test name="UI Regression Tests">
         <classes>
             <class name="com.solar.tests.CreateQuoteUITests" /> 
-           <class name="com.solar.tests.LoginUITests" />
+            <class name="com.solar.tests.LoginUITests" /> 
         </classes>
     </test>
 </suite>

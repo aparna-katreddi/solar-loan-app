@@ -17,6 +17,8 @@ public class BaseUITest {
     protected WebDriver driver;
     protected Properties config;
     protected String baseUrl = ConfigManager.get("baseUrl");
+    protected String username = System.getProperty("TEST_USERNAME");
+    protected String password = System.getProperty("TEST_PASSWORD");
 
     @BeforeMethod
     public void setUp( Method method) {
@@ -51,12 +53,12 @@ public class BaseUITest {
         driver.get(baseUrl);
     }
 
-    @AfterMethod
+   @AfterMethod
     public void tearDown() {
         if (driver != null) {
             ExtentTestManager.getTest().info("🧹 Closing browser");
             driver.quit();
             DriverManager.unload();
         }
-    }
+    } 
 }

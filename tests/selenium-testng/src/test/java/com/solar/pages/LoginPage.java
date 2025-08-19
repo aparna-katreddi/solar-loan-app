@@ -3,6 +3,10 @@ package com.solar.pages;
 import com.solar.utils.WebUIUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class LoginPage {
     private final WebDriver driver;
@@ -16,12 +20,15 @@ public class LoginPage {
         this.driver = driver;
     }
 
-    public void login(String username, String password) {
+    public QuotePage login(String username, String password) {
         WebUIUtils.clearField(driver, usernameField, "username");
         WebUIUtils.typeText(driver, usernameField, username, "username");
         WebUIUtils.clearField(driver, passwordField, "password");
         WebUIUtils.typeText(driver, passwordField, password, "password");
         WebUIUtils.click(driver, loginButton, "Login button");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.urlContains("/quote"));
+        return new QuotePage(driver);
     }
 
     public String getErrorMessage() {
