@@ -72,8 +72,20 @@ jobs:
           # Copy report
           cp "$REPORT_FILE" gh-pages/extent-report-${BROWSER}.html
 
-          # Commit and push
+          # Add clickable link with date/time stamp to index.html
           cd gh-pages
-          git add extent-report-${BROWSER}.html
-          git commit -m "📊 Update ${BROWSER} Extent Report from run ${{ github.run_number }}" || echo "No changes to commit"
+          DATE=$(date -u +"%Y-%m-%d-%-H:%M:%S")UTC
+          RUN_NUMBER=${{ github.run_number }}
+          REPORT_NAME="extent-report-${BROWSER}.html"
+
+          # Create index.html if missing
+          if [ ! -f index.html ]; then
+            echo "<html><body><h1>Test Reports</h1><ul></ul></body></html>" > index.html
+          fi
+
+          # Insert new report link before closing </ul>
+          sed -i "/<\/ul>/i <li><a href='${REPORT_NAME}?run=${DATE}'>${BROWSER} Report - Run ${RUN_NUMBER} - ${DATE}</a></li>" index.html
+
+          git add extent-report-${BROWSER}.html index.html
+          git commit -m "📝 Add link to ${BROWSER} report run ${RUN_NUMBER} at ${DATE}" || echo "No changes to commit"
           git push
