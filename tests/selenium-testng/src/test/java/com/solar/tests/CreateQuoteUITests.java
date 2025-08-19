@@ -14,6 +14,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import java.time.Duration;
 import java.util.Objects;
 
 @Listeners(TestListener.class)
@@ -71,10 +73,12 @@ public class CreateQuoteUITests extends BaseUITest {
         int year = data.getInt("year");
         double apr = data.getDouble("apr");
         LoginPage loginPage = new LoginPage(driver);
-        QuotePage quotePage= loginPage.login(username,password);
+        QuotePage quotePage= loginPage.loginAndNavigateToQuotePage(username,password);
         AssertUtils.assertEquals(driver.getCurrentUrl(),baseUrl+"/quote", "Navigated to /quote page");
         quotePage.fillForm(firstName, lastName, address, state, panel, panelCount, solarType, financeType, year, apr);
         quotePage.clickNext();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.urlContains("/quote/"));
         AssertUtils.assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/quote"), "Navigated to /quote/id page");
         String actualMonthlyRent = quotePage.getDisplayedMonthlyRent();
         double basePrice = panelCount * 500;
