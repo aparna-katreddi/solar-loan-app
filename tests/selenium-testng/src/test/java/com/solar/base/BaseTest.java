@@ -24,7 +24,7 @@ public class BaseTest {
     @BeforeMethod
     public void setUp(Method method) {
         boolean isHeadless = Boolean.parseBoolean(System.getProperty("isHeadless" , "false"));
-        System.out.println("Running test: " + method.getName());
+        System.out.println("Running test from BaseTest: " + method.getName());
         System.out.println("is headless: " +isHeadless);
         String browser = System.getProperty("browser", "chrome");
         System.out.println("browser: " +browser);
