@@ -8,26 +8,35 @@ const quoteRoute = require('./routes/quoteRoute');
 
 const app = express();
 
-// 🧠 Body parser
 app.use(express.json());
 
-// ✅ CORS config
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://solar-loan-app-frontend.onrender.com'
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function(origin, callback) {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'CORS policy does not allow this origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 
-// ✅ Routes
+app.options('*', cors()); // handle preflight OPTIONS requests
+
 app.use('/api', authRoute);
 app.use('/api', quoteRoute);
 
-// Healthcheck
 app.get('/', (req, res) => {
   res.send('🌞 Solar Quotes API is up!');
 });
 
-// ✅ Connect to MongoDB THEN start the server
 const PORT = process.env.PORT || 5001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/solar_quotes';
 
@@ -40,5 +49,5 @@ mongoose.connect(MONGO_URI)
   })
   .catch((err) => {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1); // Exit if DB not connected
+    process.exit(1);
   });
