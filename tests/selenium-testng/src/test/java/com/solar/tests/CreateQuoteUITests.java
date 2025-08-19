@@ -35,7 +35,7 @@ public class CreateQuoteUITests extends BaseTest {
         AssertUtils.assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/quote"), "Navigated to /loan page");
         String currentUrl = driver.getCurrentUrl();
         String quoteId = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
-        Response response = ApiUtils.getQuoteById(baseUrl, quoteId);
+        Response response = ApiUtils.getQuoteById(backendUrl, quoteId);
         String apiMonthlyRent = response.jsonPath().getString("monthlyRent");
         String actualMonthlyRent = quotePage.getDisplayedMonthlyRent();
         AssertUtils.assertEquals(actualMonthlyRent, "Estimated Monthly Rent: $"+apiMonthlyRent, "Monthly Rent matches API response");

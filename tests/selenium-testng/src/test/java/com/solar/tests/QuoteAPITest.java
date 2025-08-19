@@ -29,7 +29,7 @@ public class QuoteAPITest extends BaseTest{
         int year = data.getInt("year");
         double apr = data.getDouble("apr");
         String actualMonthlyRent = ApiUtils.createQuoteAndGetRent(
-                baseUrl,
+                backendUrl,
                 dealerId,
                 firstName,
                 lastName,

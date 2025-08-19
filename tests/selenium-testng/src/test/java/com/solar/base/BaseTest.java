@@ -18,6 +18,7 @@ public class BaseTest {
     protected WebDriver driver;
     protected Properties config;
     protected String baseUrl = ConfigManager.get("baseUrl");
+    protected String backendUrl = ConfigManager.get("backendUrl");
     protected String username = System.getProperty("TEST_USERNAME");
     protected String password = System.getProperty("TEST_PASSWORD");
 
@@ -50,7 +51,7 @@ public class BaseTest {
         }
         DriverManager.setDriver(driver);
         driver.manage().window().maximize();
-        String dealerId = ApiUtils.loginAndGetDealerId(baseUrl, username, password);
+        String dealerId = ApiUtils.loginAndGetDealerId(backendUrl, username, password);
         System.out.println("baseUrl: " +baseUrl);
         System.out.println("dealerId: " + dealerId);
         System.out.println("username: " + username);
