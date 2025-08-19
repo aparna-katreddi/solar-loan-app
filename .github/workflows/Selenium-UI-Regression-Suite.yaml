@@ -56,7 +56,7 @@ jobs:
         run: |
           echo "Running suite: $SUITE"
           cd tests/selenium-testng
-          mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -Dusername="${TEST_USERNAME}" -Dpassword="${TEST_PASSWORD}" -DisHeadless=true
+          mvn test -DsuiteXmlFile=src/test/resources/$SUITE -Dbrowser=$BROWSER -Denv=$ENV -DTEST_USERNAME="${TEST_USERNAME}" -DTEST_PASSWORD="${TEST_PASSWORD}" -DisHeadless=true
 
       - name: Deploy Extent Report to GitHub Pages
         if: always()
